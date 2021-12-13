@@ -20,3 +20,9 @@ bool InputSystem::WasKeyJustReleased(SDL_Scancode scanCode)
 {
 	return (!keyboardStateInfo[scanCode] && lastKeyboardStateInfo[scanCode]);
 }
+
+void InputSystem::update()
+{
+	memcpy(lastKeyboardStateInfo, keyboardStateInfo, sizeof(Uint8) * SDL_NUM_SCANCODES);
+	memcpy(keyboardStateInfo, SDL_GetKeyboardState(NULL), sizeof(Uint8) * SDL_NUM_SCANCODES);
+}

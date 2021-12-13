@@ -11,6 +11,7 @@ class InputSystem
 		bool IsKeyDown(SDL_Scancode scanCode);
 		bool WasKeyJustDown(SDL_Scancode scanCode);
 		bool WasKeyJustReleased(SDL_Scancode scanCode);
+		void update();
 };
 
 #endif

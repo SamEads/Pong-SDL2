@@ -9,8 +9,7 @@ Player* player;
 
 Game::Game()
 {
-	int flags = 0;
-	// flags = flags | SDL_WINDOW_RESIZABLE;
+	int flags = SDL_WINDOW_RESIZABLE;
 
 	if (fullscreen)
 	{
@@ -32,8 +31,12 @@ Game::Game()
 		}
 	}
 
+	// Set up fonts
 	TTF_Init();
 	mainFont = TTF_OpenFont("font.ttf", 16);
+
+	// Set render scale to stretch properly to different resolutions
+	SDL_RenderSetLogicalSize(renderer, gameWidth, gameHeight);
 
 	inputSystem = new InputSystem();
 	memset(inputSystem->lastKeyboardStateInfo, 0, sizeof(Uint8) * SDL_NUM_SCANCODES);
@@ -57,8 +60,6 @@ void Game::mainMenu()
 	rightScore = 0;
 	while (isRunning && inMainMenu)
 	{
-		memcpy(inputSystem->lastKeyboardStateInfo, inputSystem->keyboardStateInfo, sizeof(Uint8) * SDL_NUM_SCANCODES);
-		memcpy(inputSystem->keyboardStateInfo, SDL_GetKeyboardState(NULL), sizeof(Uint8) * SDL_NUM_SCANCODES);
 		handleEvents();
 		std::cout << "---" << std::endl;
 		updateMainMenu();
@@ -96,7 +97,7 @@ void Game::updateMainMenu()
 
 void Game::renderMainMenu()
 {
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	SDL_SetRenderDrawColor(renderer, 0, 0, 100, 255);
 	SDL_RenderClear(renderer);
 
 	drawText(gameWidth / 2, gameHeight / 2 - gameHeight / 4, "PONG", align::center);
@@ -105,6 +106,7 @@ void Game::renderMainMenu()
 	drawText(gameWidth / 2, (gameHeight / 2 - gameHeight / 4) + 96, (p1pointer + "1 PLAYER GAME").c_str(), align::center);
 	drawText(gameWidth / 2, (gameHeight / 2 - gameHeight / 4) + 128, (p2pointer + "2 PLAYER GAME").c_str(), align::center);
 	drawText(gameWidth / 2, (gameHeight / 2 - gameHeight / 4) + 224, "FIRST TO 10 POINTS WINS", align::center);
+	drawText(0, gameHeight - 16, "v1.0.1", align::left);
 
 	SDL_RenderPresent(renderer);
 }
@@ -121,10 +123,9 @@ void Game::playGame()
 	player->ball = ball;
 
 	// Run update @ 60 FPS
+	srand(time(NULL));
 	while (alive && isRunning)
 	{
-		memcpy(inputSystem->lastKeyboardStateInfo, inputSystem->keyboardStateInfo, sizeof(Uint8) * SDL_NUM_SCANCODES);
-		memcpy(inputSystem->keyboardStateInfo, SDL_GetKeyboardState(NULL), sizeof(Uint8) * SDL_NUM_SCANCODES);
 		handleEvents();
 		updateGame();
 		renderGame();
@@ -163,7 +164,7 @@ void Game::displayWinner()
 {
 	std::string stringFirstHalf = "PLAYER ";
 	std::string stringSecondHalf = " WINS";
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	SDL_SetRenderDrawColor(renderer, 0, 0, 100, 255);
 	SDL_RenderClear(renderer);
 	drawText(gameWidth / 2, gameHeight / 2, (stringFirstHalf + ((leftScore >= rightScore) ? "1" : "2") + stringSecondHalf).c_str(), align::center);
 	SDL_RenderPresent(renderer);
@@ -184,6 +185,8 @@ void Game::updateGame()
 
 void Game::handleEvents()
 {
+	inputSystem->update();
+
 	SDL_Event event;
 	SDL_PollEvent(&event);
 
@@ -201,7 +204,7 @@ void Game::handleEvents()
 SDL_Rect playAreaRectangle;
 void Game::renderGame()
 {
-	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	SDL_SetRenderDrawColor(renderer, 0, 0, 100, 255);
 	SDL_RenderClear(renderer);
 
 	playAreaRectangle.x = screenPadding_X - 16;
@@ -209,7 +212,7 @@ void Game::renderGame()
 	playAreaRectangle.y = screenPadding_Y;
 	playAreaRectangle.h = gameHeight - (screenPadding_Y * 2);
 
-	SDL_SetRenderDrawColor(renderer, 0, 255, 0, 128);
+	SDL_SetRenderDrawColor(renderer, 0, 128, 0, 255);
 	SDL_RenderFillRect(renderer, &playAreaRectangle);
 
 	SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);

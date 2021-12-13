@@ -23,8 +23,8 @@ class Game
 		InputSystem* inputSystem;
 		SDL_Renderer* renderer;
 		const char* title = "Pong";
-		int gameWidth = 500;
-		int gameHeight = 500;
+		int gameWidth = 640;
+		int gameHeight = 480;
 		int screenPadding_Y = 64;
 		int screenPadding_X = 32;
 		int leftScore = 0;
