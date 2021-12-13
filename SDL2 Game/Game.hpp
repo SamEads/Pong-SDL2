@@ -43,6 +43,8 @@ class Game
 		void updateMainMenu();
 		void renderMainMenu();
 
+		void displayWinner();
+
 		void clean();
 		void drawText(int x, int y, const char* msg, align alignStyle = left);
 		// Variables

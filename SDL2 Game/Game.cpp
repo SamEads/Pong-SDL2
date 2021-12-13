@@ -139,6 +139,15 @@ void Game::playGame()
 	{
 		if (leftScore >= 10 || rightScore >= 10)
 		{
+			// Show winner screen for 2 seconds
+			for (int i = 0; i < 120; i++)
+			{
+				handleEvents();
+				displayWinner();
+				SDL_Delay(1000 / 60);
+				if (!isRunning)
+					break;
+			}
 			mainMenu();
 		}
 		else
@@ -148,6 +157,17 @@ void Game::playGame()
 	// If game was cancelled out delete everything else
 	delete player;
 	delete opponent;
+}
+
+void Game::displayWinner()
+{
+	std::string stringFirstHalf = "PLAYER ";
+	std::string stringSecondHalf = " WINS";
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	SDL_RenderClear(renderer);
+	drawText(gameWidth / 2, gameHeight / 2, (stringFirstHalf + ((leftScore >= rightScore) ? "1" : "2") + stringSecondHalf).c_str(), align::center);
+	SDL_RenderPresent(renderer);
+
 }
 
 void Game::updateGame()
