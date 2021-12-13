@@ -1,13 +1,16 @@
-#ifndef Player_hpp
-#define Player_hpp
+#ifndef PLAYER_HPP
+#define PLAYER_HPP
 
 #include <SDL.h>
 #include "Game.hpp"
+#include "Ball.hpp"
 
 class Player
 {
 	private:
-		SDL_Rect testRect;
+		// Variables
+		SDL_Rect playerRect;
+		Game* game;
 	public:
 		// Constructor
 		Player(Game* _game);
@@ -15,9 +18,7 @@ class Player
 		void update();
 		void draw();
 		// Vars
-		Game* game;
-		float x = 0;
-		float y = 0;
+		Ball* ball;
 };
 
 #endif
